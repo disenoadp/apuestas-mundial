@@ -1,24 +1,19 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <h1>Panel de Administración</h1>
-    <table border="1">
-        <tr><th>Nombre</th><th>Partido</th><th>Marcador</th><th>Estado</th><th>Acción</th></tr>
-        {% for apuesta in apuestas %}
-        <tr>
-            <td>{{ apuesta.nombre }}</td>
-            <td>{{ apuesta.partido }}</td>
-            <td>{{ apuesta.local }} - {{ apuesta.visitante }}</td>
-            <td>{{ apuesta.estado }}</td>
-            <td>
-                {% if apuesta.estado == 'Pendiente' %}
-                    <a href="/validar/{{ loop.index0 }}">Validar</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <br>
-    <a href="/">Ir a formulario de apuestas</a>
-</body>
-</html>
+<h1>Panel de Control</h1>
+<form method="POST">
+    Partido: <input type="text" name="partido" value="{{ datos.partido }}">
+    Cuota: <input type="number" name="cuota" value="{{ datos.cuota }}">
+    <button type="submit">Actualizar Partido</button>
+</form>
+
+<h2>Gestionar Apuestas</h2>
+<table border="1">
+    <tr><th>Nombre</th><th>Marcador</th><th>Comprobante</th><th>Estado</th><th>Acción</th></tr>
+    {% for a in datos.apuestas %}
+    <tr>
+        <td>{{ a.nombre }}</td><td>{{ a.local }}-{{ a.visitante }}</td>
+        <td><a href="{{ a.comprobante }}" target="_blank">Ver</a></td>
+        <td>{{ a.estado }}</td>
+        <td>{% if a.estado == 'Pendiente' %}<a href="/validar/{{ loop.index0 }}">Validar</a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+</table>

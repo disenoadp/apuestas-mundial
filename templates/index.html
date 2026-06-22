@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <h1>Casa de Apuestas - Mundial</h1>
-    <form method="POST">
-        Nombre: <input type="text" name="nombre" required><br><br>
-        Partido: <input type="text" name="partido" required><br><br>
-        Goles Equipo A: <input type="number" name="local" required><br><br>
-        Goles Equipo B: <input type="number" name="visitante" required><br><br>
-        <button type="submit">Registrar Apuesta</button>
-    </form>
-</body>
-</html>
+<h1>Apuestas: {{ datos.partido }}</h1>
+<h3>Cuota de entrada: {{ datos.cuota }}</h3>
+
+<form method="POST">
+    Nombre: <input type="text" name="nombre" required><br>
+    Marcador {{ datos.partido.split('-')[0] }}: <input type="number" name="local" required><br>
+    Marcador {{ datos.partido.split('-')[1] }}: <input type="number" name="visitante" required><br>
+    Link Imagen Comprobante: <input type="url" name="comprobante" required><br>
+    <button type="submit">Apostar</button>
+</form>
+
+<h2>Participantes actuales:</h2>
+<table border="1">
+    <tr><th>Nombre</th><th>Marcador</th><th>Estado</th></tr>
+    {% for a in datos.apuestas %}
+    <tr><td>{{ a.nombre }}</td><td>{{ a.local }}-{{ a.visitante }}</td><td>{{ a.estado }}</td></tr>
+    {% endfor %}
+</table>

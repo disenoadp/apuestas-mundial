@@ -5,10 +5,9 @@ import os
 app = Flask(__name__)
 DATA_FILE = 'datos.json'
 
-# Función para asegurar que el archivo existe
 def cargar_datos():
     if not os.path.exists(DATA_FILE):
-        with open(DATA_FILE, 'w') as f: json.dump([], f)
+        return {"partido": "Esperando admin...", "cuota": 0, "apuestas": []}
     with open(DATA_FILE, 'r') as f: return json.load(f)
 
 def guardar_datos(datos):
@@ -16,28 +15,33 @@ def guardar_datos(datos):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    datos = cargar_datos()
     if request.method == 'POST':
         nueva_apuesta = {
             'nombre': request.form['nombre'],
-            'partido': request.form['partido'],
             'local': request.form['local'],
             'visitante': request.form['visitante'],
+            'comprobante': request.form['comprobante'],
             'estado': 'Pendiente'
         }
-        datos = cargar_datos()
-        datos.append(nueva_apuesta)
+        datos['apuestas'].append(nueva_apuesta)
         guardar_datos(datos)
-        return "Apuesta enviada correctamente. <a href='/'>Volver</a>"
-    return render_template('index.html')
+        return "Apuesta enviada. <a href='/'>Volver</a>"
+    return render_template('index.html', datos=datos)
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET', 'POST'])
 def admin():
-    return render_template('admin.html', apuestas=cargar_datos())
+    datos = cargar_datos()
+    if request.method == 'POST':
+        datos['partido'] = request.form['partido']
+        datos['cuota'] = request.form['cuota']
+        guardar_datos(datos)
+    return render_template('admin.html', datos=datos)
 
 @app.route('/validar/<int:index>')
 def validar(index):
     datos = cargar_datos()
-    datos[index]['estado'] = 'Validado'
+    datos['apuestas'][index]['estado'] = 'Validado'
     guardar_datos(datos)
     return redirect(url_for('admin'))
 
