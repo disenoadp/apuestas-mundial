@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Panel de Administración</h1>
+    <table border="1">
+        <tr><th>Nombre</th><th>Partido</th><th>Marcador</th><th>Estado</th><th>Acción</th></tr>
+        {% for apuesta in apuestas %}
+        <tr>
+            <td>{{ apuesta.nombre }}</td>
+            <td>{{ apuesta.partido }}</td>
+            <td>{{ apuesta.local }} - {{ apuesta.visitante }}</td>
+            <td>{{ apuesta.estado }}</td>
+            <td>
+                {% if apuesta.estado == 'Pendiente' %}
+                    <a href="/validar/{{ loop.index0 }}">Validar</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/">Ir a formulario de apuestas</a>
+</body>
+</html>
